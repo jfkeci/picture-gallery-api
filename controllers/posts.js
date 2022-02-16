@@ -5,9 +5,9 @@ export const getPosts = async (req, res) => {
     try {
         const posts = await Post.find()
 
-        res.status(200).json(posts)
+        return res.status(200).json(posts)
     } catch (err) {
-        res.status(404).json({
+        return res.status(404).json({
             message: err.message
         })
     }
@@ -21,9 +21,9 @@ export const createPost = async (req, res) => {
     try {
         await newPost.save()
 
-        res.status(201).json(newPost)
+        return res.status(201).json(newPost)
     } catch (error) {
-        res.status(409).json({
+        return res.status(409).json({
             message: error
         })
     }
@@ -40,7 +40,7 @@ export const updatePost = async (req, res) => {
 
     const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true })
 
-    res.json(updatedPost)
+    return res.status(200).json(updatedPost)
 }
 
 export const deletePost = async (req, res) => {
@@ -52,7 +52,7 @@ export const deletePost = async (req, res) => {
 
     await Post.findByIdAndRemove(id)
 
-    res.json({
+    return res.json({
         message: `Post ${id} deleted successfully`
     })
 }
@@ -68,5 +68,15 @@ export const likePost = async (req, res) => {
 
     const updatedPost = await Post.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true })
 
-    res.json(updatedPost)
+    return res.stats(200).json(updatedPost)
+}
+
+export const getPost = async (req, res) => {
+    const { id } = req.params
+
+    const post = await Post.findOne({ id });
+
+    if (post) return res.status(200).json(post)
+
+    return res.status(404).json({ message: 'No post found' })
 }
