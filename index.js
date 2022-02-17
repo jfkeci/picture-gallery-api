@@ -3,6 +3,9 @@ import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import swaggerUi from 'swagger-ui-express'
+
+import { swaggerDocs } from './swagger.js'
 
 dotenv.config()
 
@@ -11,6 +14,8 @@ import userRoutes from './routes/user.js'
 import commentRoutes from './routes/comments.js'
 
 const app = express()
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.use(bodyParser.json({ limit: "30Mb", extended: true }))
 app.use(bodyParser.urlencoded({ limit: "30Mb", extended: true }))
