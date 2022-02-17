@@ -38,7 +38,7 @@ export const registerUser = async (req, res) => {
 
         if (user) return res.status(400).json({ message: 'User with this email already exists' })
         if (password !== confirmPassword) return res.status(400).json({ message: 'Passwords do not match' })
-        if (password.length < 9) return res.status(400).json({ message: 'Password too short' })
+        if (password.length < 6) return res.status(400).json({ message: 'Password too short' })
 
         const hashedPassword = await bcrypt.hash(password, 12)
 
@@ -60,5 +60,15 @@ export const registerUser = async (req, res) => {
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: 'Something went wrong' })
+    }
+}
+
+export const getUsers = async (req, res) => {
+    try {
+        const users = User.find();
+
+        return res.status(200).json(users)
+    } catch (error) {
+        return res.status(404).json({ error: error })
     }
 }

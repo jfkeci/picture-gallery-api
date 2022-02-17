@@ -8,6 +8,7 @@ dotenv.config()
 
 import postRoutes from './routes/posts.js'
 import userRoutes from './routes/user.js'
+import commentRoutes from './routes/comments.js'
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(cors())
 
 app.use('/posts', postRoutes)
 app.use('/user', userRoutes)
+app.use('/comments', commentRoutes)
 
 app.get('/', (req, res) => {
     res.send('Welcome to picture gallery api')

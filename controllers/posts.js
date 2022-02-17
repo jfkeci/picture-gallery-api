@@ -6,10 +6,8 @@ export const getPosts = async (req, res) => {
         const posts = await Post.find()
 
         return res.status(200).json(posts)
-    } catch (err) {
-        return res.status(404).json({
-            message: err.message
-        })
+    } catch (error) {
+        return res.status(404).json({ message: error })
     }
 }
 
@@ -23,9 +21,7 @@ export const createPost = async (req, res) => {
 
         return res.status(201).json(newPost)
     } catch (error) {
-        return res.status(409).json({
-            message: error
-        })
+        return res.status(409).json({ message: error })
     }
 }
 
@@ -60,13 +56,27 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
     const { id } = req.params
 
+    if (!req.userId) {
+        return res.json({ message: 'Not allowed' })
+    }
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).send('No post with id: ' + id)
     }
 
     const post = await Post.findById(id)
 
-    const updatedPost = await Post.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true })
+    const index = post.like.findIndex((id) => id === String(req.userId))
+
+    if (index === -1) {
+        //like
+        post.likes.push(req.userId)
+    } else {
+        //dislike
+        post.likes = post.likes.filter((id) => id !== String(res.userId))
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true })
 
     return res.stats(200).json(updatedPost)
 }
@@ -79,4 +89,29 @@ export const getPost = async (req, res) => {
     if (post) return res.status(200).json(post)
 
     return res.status(404).json({ message: 'No post found' })
+}
+
+export const populatePosts = async (req, res) => {
+
+    let { no } = req.body
+
+    let img = 'https://picsum.photos/1500/1500'
+
+    let newPost = new Post({
+        title: 'Post ' + no,
+        body: 'Post body ' + no,
+        tags: ['food ' + no, 'healthy ' + no, 'chef ' + no],
+        selectedFile: img,
+        createdBy: 'jfkeci',
+    })
+
+    try {
+        await newPost.save()
+
+        return res.status(201).json(newPost)
+    } catch (error) {
+        return res.status(409).json({
+            message: error
+        })
+    }
 }
