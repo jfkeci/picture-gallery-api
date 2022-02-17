@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import swaggerUi from 'swagger-ui-express'
 
 import { swaggerDocs } from './swagger.js'
+import { logger } from './logger.js'
 
 dotenv.config()
 
@@ -40,7 +41,7 @@ mongoose.connect(CONNECTION_URL, {
     useUnifiedTopology: true,
 }).then(() => {
     app.listen(PORT, () => {
-        console.log('Server running on port ' + PORT)
+        logger.info('Server running on port ' + PORT)
     })
 }).catch((err) => {
     console.log('Error ' + err.message)
