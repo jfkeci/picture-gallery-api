@@ -12,7 +12,8 @@ export const getPosts = async (req, res) => {
 }
 
 export const createPost = async (req, res) => {
-    const post = req.body
+    let post = req.body
+    post['selectedFile'] = req.file.filename
 
     const newPost = new Post(post)
 

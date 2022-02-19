@@ -31,6 +31,8 @@ app.get('/', (req, res) => {
     res.send('Welcome to picture gallery api')
 })
 
+app.use(express.static('uploads'))
+
 
 const CONNECTION_URL = process.env.CONNECTION_URL
 const PORT = process.env.PORT || 5001
