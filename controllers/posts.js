@@ -3,7 +3,7 @@ import Post from '../models/Post.js'
 
 export const getPosts = async (req, res) => {
     try {
-        const posts = await Post.find()
+        const posts = await Post.find({}).sort({ createdAt: 'desc' })
 
         return res.status(200).json(posts)
     } catch (error) {
@@ -31,7 +31,7 @@ export const updatePost = async (req, res) => {
     const post = req.body
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).send('No post with id: ' + id)
+        return res.status(404).json('No post with id: ' + id)
     }
 
     const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true })
@@ -43,7 +43,7 @@ export const deletePost = async (req, res) => {
     const { id } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).send('No post with id: ' + id)
+        return res.status(404).json({ message: 'No post with id: ' + id })
     }
 
     await Post.findByIdAndRemove(id)
@@ -54,31 +54,31 @@ export const deletePost = async (req, res) => {
 }
 
 export const likePost = async (req, res) => {
-    const { id } = req.params
+    const { id, userId } = req.params
 
-    if (!req.userId) {
+    if (!userId) {
         return res.json({ message: 'Not allowed' })
     }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).send('No post with id: ' + id)
+        return res.status(404).json({ message: 'No post with id: ' + id })
     }
 
     const post = await Post.findById(id)
 
-    const index = post.like.findIndex((id) => id === String(req.userId))
+    const index = post.likes.findIndex((id) => id === String(userId))
 
     if (index === -1) {
         //like
-        post.likes.push(req.userId)
+        post.likes.push(userId)
     } else {
         //dislike
-        post.likes = post.likes.filter((id) => id !== String(res.userId))
+        post.likes = post.likes.filter((id) => id !== String(userId))
     }
 
     const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true })
 
-    return res.stats(200).json(updatedPost)
+    return res.status(200).json(updatedPost)
 }
 
 export const getPost = async (req, res) => {
