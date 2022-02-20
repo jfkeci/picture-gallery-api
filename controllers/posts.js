@@ -11,6 +11,18 @@ export const getPosts = async (req, res) => {
     }
 }
 
+export const searchPosts = async (req, res) => {
+    const { filter } = req.query
+    console.log(filter)
+    try {
+        const posts = await Post.find({ "title": new RegExp(filter, 'i') },)
+
+        return res.status(200).json(posts)
+    } catch (error) {
+        return res.status(404).json({ message: error })
+    }
+}
+
 export const createPost = async (req, res) => {
     let post = req.body
     post['selectedFile'] = req.file.filename
@@ -70,10 +82,8 @@ export const likePost = async (req, res) => {
     const index = post.likes.findIndex((id) => id === String(userId))
 
     if (index === -1) {
-        //like
         post.likes.push(userId)
     } else {
-        //dislike
         post.likes = post.likes.filter((id) => id !== String(userId))
     }
 

@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getPosts, createPost, updatePost, deletePost, likePost, getPost, populatePosts } from '../controllers/posts.js'
+import { getPosts, createPost, updatePost, deletePost, likePost, getPost, searchPosts } from '../controllers/posts.js'
 import auth from '../middleware/auth.js'
 
 const router = express.Router()
@@ -17,6 +17,7 @@ import { upload } from '../uploads.js'
  *              description: A successfull request
  */
 router.get('/', getPosts)
+router.get('/search', searchPosts)
 router.get('/:id', getPost)
 router.post('/', upload.single('selectedFile'), createPost)
 router.patch('/:id', updatePost)
