@@ -33,10 +33,8 @@ app.get('/', (req, res) => {
 
 app.use(express.static('uploads'))
 
-
 const CONNECTION_URL = process.env.CONNECTION_URL
 const PORT = process.env.PORT || 5001
-
 
 mongoose.connect(CONNECTION_URL, {
     useNewUrlParser: true,

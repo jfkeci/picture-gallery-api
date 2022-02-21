@@ -13,7 +13,6 @@ export const getPosts = async (req, res) => {
 
 export const searchPosts = async (req, res) => {
     const { filter } = req.query
-    console.log(filter)
     try {
         const posts = await Post.find({ "title": new RegExp(filter, 'i') },)
 

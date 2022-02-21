@@ -2,13 +2,18 @@ import swaggerJsDoc from 'swagger-jsdoc'
 
 const swaggerOptions = {
     swaggerDefinition: {
+        openapi: '3.0.0',
         info: {
             title: "Picture Gallery API",
-            description: "Customer API Information",
+            description: "Picture Gallery API  Documentation",
             contact: {
-                name: "jfkeci"
+                name: 'jfkeci',
+                url: 'https://github.com/jfkeci',
             },
-            servers: ["http://localhost:5001"]
+            servers: [{
+                url: 'http://localhost:5001',
+                description: 'Development server',
+            },]
         }
     },
     apis: [
